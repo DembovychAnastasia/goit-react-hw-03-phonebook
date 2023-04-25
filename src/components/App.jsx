@@ -7,6 +7,8 @@ import {ContactForm} from "./FormContact/FormContact";
 import { ContactList } from "./ContactList/ContacttList";
 import { Filter } from "./FilterContact/FilterContact";
 
+// import initialRecipes from '../recipes.json';
+
 
 // export const App = () => {
 //   return (
@@ -17,6 +19,8 @@ import { Filter } from "./FilterContact/FilterContact";
 //   );
 // };
 
+
+// render > didMount > getItem > setState > update > render > didUpdate > setItem
 export class App extends Component {
   state = {
     contacts: [
@@ -28,6 +32,24 @@ export class App extends Component {
     filter: '',
  
   };
+
+  componentDidMount() {
+    const savedContact = localStorage.getItem('contacts');
+    if (savedContact !== null) {
+      // Якщо  в LS записуємо  в state
+      this.setState({ contacts: JSON.parse(savedContact) });
+    } else {
+      // Якщо  в LS немає нічого, пишемо в this.state.contacts
+      this.setState({ contacts: this.state.contacts });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
 
   addContact = newContact => {
     this.state.contacts.find(
